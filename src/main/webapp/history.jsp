@@ -13,7 +13,7 @@
     <title>Title</title>
     <script type="text/javascript">
         function deleteRow(obj){
-            var p = obj.parentNode.parentNode;
+            var p = obj.parentNode.parentNode.parentNode;
             p.parentNode.removeChild(p);
         }
     </script>
@@ -75,7 +75,10 @@
         <td><%=history.getyCoord()%></td>
         <td><%=history.getCreatedAt()%></td>
         <td>
-            <input type='button' value='삭제' onclick="deleteRow(this)" id='<%=history.getId()%>'/>
+            <form action="http://localhost:8080/hs.do" method="get" target='mock'>
+                <input type="hidden" name="hist_id" value='<%=history.getId()%>'>
+                <input type='submit' value='삭제' onclick="deleteRow(this)"/>
+            </form>
         </td>
     </tr>
     <%
@@ -83,6 +86,8 @@
     %>
     </tbody>
 </table>
+
+<iframe name="mock" style="display: none;"></iframe>
 
 </body>
 </html>

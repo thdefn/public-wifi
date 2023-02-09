@@ -370,7 +370,7 @@ public class WifiService {
             sql =  " delete from history where hist_id = ? ";
             prepared = dbConnection.prepareStatement(sql);
             prepared.setInt(1,id);
-            prepared.executeQuery();
+            prepared.executeUpdate();
 
 
         } catch (ClassNotFoundException e) {
