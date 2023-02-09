@@ -1,3 +1,6 @@
+<%@ page import="com.zerobase.publicwifi.Wifi" %>
+<%@ page import="com.zerobase.publicwifi.WifiService" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -34,8 +37,7 @@
             width: 100%; border-collapse: collapse; font-family: Arial, Helvetica, sans-serif;
         }
         #table td, #table th{
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid #ddd; padding: 8px; text-align: left;
         }
         #table tr:nth-child(even){
             background-color: #f2f2f2;
@@ -50,20 +52,34 @@
 </head>
 
 <body>
+<%
+    boolean isSubmit = false;
+    Float latitude = null;
+    Float longitude = null;
+    String lat = request.getParameter("lat");
+    String lnt = request.getParameter("lnt");
+    if(lat!=null && lnt!=null){
+        latitude = Float.valueOf(lat);
+        longitude = Float.valueOf(lnt);
+        isSubmit = true;
+    }
+%>
+
 <h1>와이파이 정보 구하기</h1><br/>
 <div class="menu">
-    <div class="item"> 홈 </div>
-    <div class="item"> 위치 히스토리 목록 </div>
+    <div class="item"> <a href="index.jsp"> 홈 </a> </div>
+    <div class="item"> <a href="history.jsp"> 위치 히스토리 목록 </a> </div>
     <div class="item last"> <a href="load-wifi.jsp"> Open API 와이파이 정보 가져오기 </a> </div>
 </div><br/>
 
-<form>
+<form action="?" method="get">
     <label for="lat"> LAT: </label>
-    <input type="text" id="lat" value="0.0">
+    <input type="text" id="lat" value="0.0" name="lat">
     <label for="lnt">, LNT: </label>
-    <input type="text" id="lnt" value="0.0">
+    <input type="text" id="lnt" value="0.0" name="lnt">
     <input type="button" id="loc" value="내 위치 가져오기" onclick="getLocation()">
     <input type="submit" id="info" value="근처 WIFI 정보보기">
+
 </form><br/>
 
 <table id="table">
@@ -89,8 +105,48 @@
     </tr>
     </thead>
     <tbody>
+    <%
+        if(isSubmit){
+            WifiService wifiService = new WifiService();
+            List<Wifi> wifiList = wifiService.getCloseList(latitude,longitude);
+            wifiService.addHistory(latitude, longitude);
+
+            for (Wifi wifi:wifiList) {
+
+    %>
     <tr>
+        <td> <%=wifi.getDistance()%></td>
+        <td> <%=wifi.getManageId()%></td>
+        <td> <%=wifi.getDistrict()%></td>
+        <td> <%=wifi.getName()%></td>
+        <td> <%=wifi.getRoadAddress()%></td>
+        <td> <%=wifi.getDetailAddress()%></td>
+        <td> <%=wifi.getFloor()%></td>
+        <td> <%=wifi.getInstallType()%></td>
+        <td> <%=wifi.getInstallAgency()%></td>
+        <td> <%=wifi.getService()%></td>
+        <td> <%=wifi.getNetwork()%></td>
+        <td> <%=wifi.getYear()%></td>
+        <td> <%= wifi.isIndoor()?"실내":"실외"%></td>
+        <td> <%=wifi.getEnvironment()%></td>
+        <td> <%=wifi.getxCoord()%></td>
+        <td> <%=wifi.getyCoord()%></td>
+        <td> <%=wifi.getWorkAt()%></td>
     </tr>
+    <%
+            }
+        }
+        else{
+    %>
+
+    <tr>
+        <td colspan="17" align="center"> 위치 정보를 입력한 후에 조회해주세요 </td>
+    </tr>
+
+    <%
+        }
+    %>
+
     </tbody>
 </table>
 </body>
