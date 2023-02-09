@@ -45,20 +45,20 @@
 
             let lat;
             lat = document.createElement('input');
-            lat.setAttribute('type','hiden');
+            lat.setAttribute('type','hidden');
             lat.setAttribute('name','lat');
             lat.setAttribute('value',latTag.value);
 
             let lnt;
             lnt = document.createElement('input');
-            lnt.setAttribute('type','hiden');
+            lnt.setAttribute('type','hidden');
             lnt.setAttribute('name','lnt');
             lnt.setAttribute('value',lntTag.value);
 
             f.appendChild(lat);
             f.appendChild(lnt);
             f.setAttribute('method','post');
-            f.setAttribute('action',"/Gradle___com_zerobase___public_wifi_1_0_SNAPSHOT_war/history.jsp");
+            f.setAttribute('action',"/history.jsp");
 
             document.body.appendChild(f);
             f.submit();

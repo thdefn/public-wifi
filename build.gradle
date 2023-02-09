@@ -10,6 +10,10 @@ repositories {
     mavenCentral()
 }
 
+war{
+    archiveName('ROOT.war')
+}
+
 ext {
     junitVersion = '5.8.2'
 }
@@ -29,9 +33,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation 'com.google.code.gson:gson:2.9.0'
-
-    // https://mvnrepository.com/artifact/org.projectlombok/lombok
-    compileOnly 'org.projectlombok:lombok:1.18.24'
 
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
