@@ -1,12 +1,7 @@
 package com.zerobase.publicwifi;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.Date;
 
-@NoArgsConstructor
 public class Wifi {
     private Float distance;
     private String manageId;

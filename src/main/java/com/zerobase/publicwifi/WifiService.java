@@ -102,7 +102,7 @@ public class WifiService {
                     prepared.setString(13,row.get("X_SWIFI_REMARS3").getAsString());
                     prepared.setFloat(14,row.get("LAT").getAsFloat());
                     prepared.setFloat(15,row.get("LNT").getAsFloat());
-                    prepared.setDate(16,Date.valueOf(row.get("WORK_DTTM").getAsString()));
+                    prepared.setString(16,row.get("WORK_DTTM").getAsString());
                     prepared.executeUpdate();
                     //System.out.println(prepared.executeUpdate());
                 }
@@ -111,11 +111,13 @@ public class WifiService {
 
             }
 
+            /*
             rs = statement.executeQuery(" select * from wifi limit 10");
 
             while (rs.next()){
                 System.out.println(rs.getString("MGR_NO"));
             }
+             */
 
 
             return totalCount;
@@ -183,7 +185,7 @@ public class WifiService {
                     "       connect_env, x_coord, y_coord, work_at, " +
                     "       ( 6371 * acos( cos( radians(x_coord) ) * cos( radians( ? ) )* cos( radians( ? ) - radians(y_coord) )+ sin( radians(x_coord) ) * sin( radians( ? ) ) ) ) as distance " +
                     " from wifi " +
-                    "order by distance limit 20";
+                    " order by distance limit 20 ";
 
             prepared = dbConnection.prepareStatement(sql);
             prepared.setFloat(1, lat);
@@ -264,7 +266,7 @@ public class WifiService {
             prepared = dbConnection.prepareStatement(sql);
             prepared.setFloat(1,lat);
             prepared.setFloat(2,lnt);
-            prepared.setDate(3, Date.valueOf(LocalDate.now()));
+            prepared.setDate(3, Date.valueOf(LocalDateTime.now().toLocalDate()));
             prepared.executeUpdate();
 
         } catch (ClassNotFoundException e) {
@@ -294,10 +296,108 @@ public class WifiService {
 
     }
 
-    public void getHistory(){
+    public List<History> getHistory(Float lat, Float lnt){
         Connection dbConnection = null;
         PreparedStatement prepared = null;
         String sql;
+        ResultSet rs = null;
+        List<History> histories = new ArrayList<>();
+        History history = null;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            dbConnection = DriverManager.getConnection(DB_URL);
+            sql =  " select * from history where x_coord = ? and y_coord = ? ";
+            prepared = dbConnection.prepareStatement(sql);
+            prepared.setFloat(1,lat);
+            prepared.setFloat(2,lnt);
+            rs = prepared.executeQuery();
+
+            while (rs.next()){
+                history = new History();
+                history.setId(rs.getInt("hist_id"));
+                history.setxCoord(rs.getFloat("x_coord"));
+                history.setyCoord(rs.getFloat("y_coord"));
+                history.setCreatedAt(rs.getDate("created_at"));
+                histories.add(history);
+            }
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+
+            try {
+                if(prepared!= null && !prepared.isClosed()){
+                    prepared.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if(rs!= null && !rs.isClosed()){
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if(dbConnection!= null && !dbConnection.isClosed()){
+                    dbConnection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return histories;
+
+    }
+
+    public void deleteHistory(int id){
+        Connection dbConnection = null;
+        PreparedStatement prepared = null;
+        String sql;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            dbConnection = DriverManager.getConnection(DB_URL);
+            sql =  " delete from history where hist_id = ? ";
+            prepared = dbConnection.prepareStatement(sql);
+            prepared.setInt(1,id);
+            prepared.executeQuery();
+
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+
+            try {
+                if(prepared!= null && !prepared.isClosed()){
+                    prepared.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if(dbConnection!= null && !dbConnection.isClosed()){
+                    dbConnection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
 
     }
 

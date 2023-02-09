@@ -1,4 +1,6 @@
-<%--
+<%@ page import="com.zerobase.publicwifi.WifiService" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.zerobase.publicwifi.History" %><%--
   Created by IntelliJ IDEA.
   User: thdefn
   Date: 2023/02/09
@@ -9,6 +11,12 @@
 <html>
 <head>
     <title>Title</title>
+    <script type="text/javascript">
+        function deleteRow(obj){
+            var p = obj.parentNode.parentNode;
+            p.parentNode.removeChild(p);
+        }
+    </script>
     <style>
         .menu:after{clear: both; display: block; content: ''}
         .item{
@@ -32,6 +40,13 @@
     </style>
 </head>
 <body>
+<%
+    Float latitude = Float.valueOf(request.getParameter("lat"));
+    Float longitude = Float.valueOf(request.getParameter("lnt"));
+
+    WifiService wifiService = new WifiService();
+    List<History> historyList = wifiService.getHistory(latitude, longitude);
+%>
 
 <h1>위치 히스토리 목록</h1><br/>
 <div class="menu">
@@ -51,8 +66,21 @@
     </tr>
     </thead>
     <tbody>
+    <%
+        for (History history : historyList) {
+    %>
     <tr>
+        <td><%=history.getId()%></td>
+        <td><%=history.getxCoord()%></td>
+        <td><%=history.getyCoord()%></td>
+        <td><%=history.getCreatedAt()%></td>
+        <td>
+            <input type='button' value='삭제' onclick="deleteRow(this)"/>
+        </td>
     </tr>
+    <%
+        }
+    %>
     </tbody>
 </table>
 

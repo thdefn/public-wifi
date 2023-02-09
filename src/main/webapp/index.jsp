@@ -24,6 +24,46 @@
             navigator.geolocation.getCurrentPosition(success, error);
         }
 
+        function sendData(){
+
+            let latTag = document.form.lat;
+            let lntTag = document.form.lnt;
+
+            if(latTag == null || latTag.value == "0.0"){
+                alert("위도 값을 입력하세요")
+                latTag.focus();
+                return false;
+            }
+
+            if(lntTag == null || lntTag.value == "0.0"){
+                alert("경도 값을 입력하세요")
+                lntTag.focus();
+                return false;
+            }
+
+            let f = document.createElement('form');
+
+            let lat;
+            lat = document.createElement('input');
+            lat.setAttribute('type','hiden');
+            lat.setAttribute('name','lat');
+            lat.setAttribute('value',latTag.value);
+
+            let lnt;
+            lnt = document.createElement('input');
+            lnt.setAttribute('type','hiden');
+            lnt.setAttribute('name','lnt');
+            lnt.setAttribute('value',lntTag.value);
+
+            f.appendChild(lat);
+            f.appendChild(lnt);
+            f.setAttribute('method','post');
+            f.setAttribute('action',"/Gradle___com_zerobase___public_wifi_1_0_SNAPSHOT_war/history.jsp");
+
+            document.body.appendChild(f);
+            f.submit();
+        }
+
     </script>
     <style>
         .menu:after{clear: both; display: block; content: ''}
@@ -45,7 +85,8 @@
         #table th{
             padding-top: 12px; padding-bottom: 12px; text-align: center; background-color: #04AA6D; color: white; padding-left: 5px; padding-right: 5px;
         }
-        #table td tr:empty::before{content : "위치 정보를 입력한 후에 조회해주세요"; text-align: center; column-span: all; }
+        #table td:empty::before{content : "위치 정보를 입력한 후에 조회해주세요"; text-align: center; column-span: all; }
+        #table th td:empty::before{ align-items: center; }
 
 
     </style>
@@ -68,11 +109,11 @@
 <h1>와이파이 정보 구하기</h1><br/>
 <div class="menu">
     <div class="item"> <a href="index.jsp"> 홈 </a> </div>
-    <div class="item"> <a href="history.jsp"> 위치 히스토리 목록 </a> </div>
+    <div class="item"> <a href="javascript:void(0)" onclick="sendData()"> 위치 히스토리 목록 </a> </div>
     <div class="item last"> <a href="load-wifi.jsp"> Open API 와이파이 정보 가져오기 </a> </div>
 </div><br/>
 
-<form action="?" method="get">
+<form action="?" method="get" name="form">
     <label for="lat"> LAT: </label>
     <input type="text" id="lat" value="0.0" name="lat">
     <label for="lnt">, LNT: </label>
@@ -140,7 +181,7 @@
     %>
 
     <tr>
-        <td colspan="17" align="center"> 위치 정보를 입력한 후에 조회해주세요 </td>
+        <td colspan="17"></td>
     </tr>
 
     <%
