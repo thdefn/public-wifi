@@ -98,10 +98,10 @@ public class WifiService {
                     prepared.setString(9,row.get("X_SWIFI_SVC_SE").getAsString());
                     prepared.setString(10,row.get("X_SWIFI_CMCWR").getAsString());
                     prepared.setString(11,row.get("X_SWIFI_CNSTC_YEAR").getAsString());
-                    prepared.setString(12,row.get("X_SWIFI_INOUT_DOOR").getAsString());
+                    prepared.setBoolean(12,("실내".equals(row.get("X_SWIFI_INOUT_DOOR").getAsString()))?true:false); //1:0
                     prepared.setString(13,row.get("X_SWIFI_REMARS3").getAsString());
-                    prepared.setFloat(14,row.get("LAT").getAsFloat());
-                    prepared.setFloat(15,row.get("LNT").getAsFloat());
+                    prepared.setFloat(14,row.get("LNT").getAsFloat()); //json에 따라 변경
+                    prepared.setFloat(15,row.get("LAT").getAsFloat());
                     prepared.setString(16,row.get("WORK_DTTM").getAsString());
                     prepared.executeUpdate();
                     //System.out.println(prepared.executeUpdate());

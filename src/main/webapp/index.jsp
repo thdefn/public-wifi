@@ -103,6 +103,9 @@
         latitude = Float.valueOf(lat);
         longitude = Float.valueOf(lnt);
         isSubmit = true;
+    }else {
+        lat = "0.0";
+        lnt = "0.0";
     }
 %>
 
@@ -113,11 +116,11 @@
     <div class="item last"> <a href="load-wifi.jsp"> Open API 와이파이 정보 가져오기 </a> </div>
 </div><br/>
 
-<form action="?" method="get" name="form">
+<form method="get" name="form">
     <label for="lat"> LAT: </label>
-    <input type="text" id="lat" value="0.0" name="lat">
+    <input type="text" id="lat" value='<%=lat%>' name="lat">
     <label for="lnt">, LNT: </label>
-    <input type="text" id="lnt" value="0.0" name="lnt">
+    <input type="text" id="lnt" value='<%=lnt%>' name="lnt">
     <input type="button" id="loc" value="내 위치 가져오기" onclick="getLocation()">
     <input type="submit" id="info" value="근처 WIFI 정보보기">
 

@@ -75,7 +75,7 @@
         <td><%=history.getyCoord()%></td>
         <td><%=history.getCreatedAt()%></td>
         <td>
-            <input type='button' value='삭제' onclick="deleteRow(this)"/>
+            <input type='button' value='삭제' onclick="deleteRow(this)" id='<%=history.getId()%>'/>
         </td>
     </tr>
     <%
