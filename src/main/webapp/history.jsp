@@ -1,6 +1,7 @@
 <%@ page import="com.zerobase.publicwifi.WifiService" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.zerobase.publicwifi.History" %><%--
+<%@ page import="com.zerobase.publicwifi.History" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: thdefn
   Date: 2023/02/09
@@ -10,11 +11,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>와이파이 정보 구하기</title>
     <script type="text/javascript">
-        function deleteRow(obj){
-            var p = obj.parentNode.parentNode.parentNode;
-            p.parentNode.removeChild(p);
+        function deleteRow(id){
+            console.log("deleterow")
+            let row = document.getElementById(id);
+            row.parentNode.removeChild(row);
+            //var p = obj.parentNode.parentNode;
+            //p.parentNode.removeChild(p);
         }
     </script>
     <style>
@@ -41,11 +45,18 @@
 </head>
 <body>
 <%
-    Float latitude = Float.valueOf(request.getParameter("lat"));
-    Float longitude = Float.valueOf(request.getParameter("lnt"));
+    String lat = request.getParameter("lat");
+    String lnt = request.getParameter("lnt");
+    List<History> historyList = new ArrayList<>();
 
-    WifiService wifiService = new WifiService();
-    List<History> historyList = wifiService.getHistory(latitude, longitude);
+    if(lat != null && lnt != null) {
+
+        Float latitude = Float.valueOf(lat);
+        Float longitude = Float.valueOf(lnt);
+
+        WifiService wifiService = new WifiService();
+        historyList = wifiService.getHistory(latitude, longitude);
+    }
 %>
 
 <h1>위치 히스토리 목록</h1><br/>
@@ -69,15 +80,15 @@
     <%
         for (History history : historyList) {
     %>
-    <tr>
+    <tr id='<%=history.getId()%>'>
         <td><%=history.getId()%></td>
         <td><%=history.getxCoord()%></td>
         <td><%=history.getyCoord()%></td>
         <td><%=history.getCreatedAt()%></td>
         <td>
-            <form action="http://localhost:8080/hs.do" method="get" target='mock'>
+            <form action="http://localhost:8080/hs.do" method="get" target="mock">
                 <input type="hidden" name="hist_id" value='<%=history.getId()%>'>
-                <input type='submit' value='삭제' onclick="deleteRow(this)"/>
+                <input type='submit' value='삭제'>
             </form>
         </td>
     </tr>

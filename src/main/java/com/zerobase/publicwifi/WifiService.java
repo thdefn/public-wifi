@@ -372,7 +372,6 @@ public class WifiService {
             prepared.setInt(1,id);
             prepared.executeUpdate();
 
-
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {
