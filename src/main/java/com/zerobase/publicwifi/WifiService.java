@@ -21,6 +21,7 @@ public class WifiService {
     private static final String AUTH_KEY = "7948437a6c74686438344872706241";
     private static final String BASE_URL = "http://openapi.seoul.go.kr:8088/";
     private static final String DB_URL = "jdbc:sqlite:wifiDB.db";
+
     public int loadWifi(){
         Connection dbConnection = null;
         Statement statement = null;
@@ -44,7 +45,6 @@ public class WifiService {
                     " NETWORK VARCHAR(10), YEAR VARCHAR(4), INDOOR BOOLEAN, CONNECT_ENV VARCHAR(10), " +
                     " X_COORD REAL NOT NULL, Y_COORD REAL NOT NULL, WORK_AT DATE ) ");
 
-            //statement.executeUpdate(" insert into WIFI (MGR_NO, X_COORD, Y_COORD) values ('TEST',12.34,123.412) " );
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -104,21 +104,11 @@ public class WifiService {
                     prepared.setFloat(15,row.get("LAT").getAsFloat());
                     prepared.setString(16,row.get("WORK_DTTM").getAsString());
                     prepared.executeUpdate();
-                    //System.out.println(prepared.executeUpdate());
                 }
 
                 startIdx += 1000;
 
             }
-
-            /*
-            rs = statement.executeQuery(" select * from wifi limit 10");
-
-            while (rs.next()){
-                System.out.println(rs.getString("MGR_NO"));
-            }
-             */
-
 
             return totalCount;
 
@@ -270,9 +260,9 @@ public class WifiService {
             prepared.executeUpdate();
 
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         finally {
 

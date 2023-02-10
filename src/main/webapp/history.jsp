@@ -17,8 +17,6 @@
             console.log("deleterow")
             let row = document.getElementById(id);
             row.parentNode.removeChild(row);
-            //var p = obj.parentNode.parentNode;
-            //p.parentNode.removeChild(p);
         }
     </script>
     <style>
