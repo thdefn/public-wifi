@@ -19,7 +19,7 @@ public class Wifi {
     private String environment;
     private Float xCoord;
     private Float yCoord;
-    private Date workAt;
+    private String workAt;
 
     public Float getDistance() {
         return distance;
@@ -149,11 +149,11 @@ public class Wifi {
         this.yCoord = yCoord;
     }
 
-    public Date getWorkAt() {
+    public String getWorkAt() {
         return workAt;
     }
 
-    public void setWorkAt(Date workAt) {
+    public void setWorkAt(String workAt) {
         this.workAt = workAt;
     }
 }

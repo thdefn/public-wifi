@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 
 public class WifiService {
     private static final String AUTH_KEY = "7948437a6c74686438344872706241";
@@ -202,7 +203,7 @@ public class WifiService {
                 wifi.setEnvironment(rs.getString("connect_env"));
                 wifi.setxCoord(rs.getFloat("x_coord"));
                 wifi.setyCoord(rs.getFloat("y_coord"));
-                wifi.setWorkAt(rs.getDate("work_at"));
+                wifi.setWorkAt(rs.getString("work_at"));
 
                 wifis.add(wifi);
             }
@@ -252,11 +253,10 @@ public class WifiService {
             Class.forName("org.sqlite.JDBC");
             dbConnection = DriverManager.getConnection(DB_URL);
             sql =  " insert into history ( x_coord, y_coord, created_at ) " +
-                    "values (?,?,?) ";
+                    "values (?,?, datetime('now') ) ";
             prepared = dbConnection.prepareStatement(sql);
             prepared.setFloat(1,lat);
             prepared.setFloat(2,lnt);
-            prepared.setDate(3, Date.valueOf(LocalDateTime.now().toLocalDate()));
             prepared.executeUpdate();
 
         } catch (ClassNotFoundException e) {
@@ -297,7 +297,8 @@ public class WifiService {
         try {
             Class.forName("org.sqlite.JDBC");
             dbConnection = DriverManager.getConnection(DB_URL);
-            sql =  " select * from history where x_coord = ? and y_coord = ? ";
+            sql =  " select hist_id, x_coord, y_coord, created_at " +
+                    " from history where x_coord = ? and y_coord = ? ";
             prepared = dbConnection.prepareStatement(sql);
             prepared.setFloat(1,lat);
             prepared.setFloat(2,lnt);
@@ -308,7 +309,7 @@ public class WifiService {
                 history.setId(rs.getInt("hist_id"));
                 history.setxCoord(rs.getFloat("x_coord"));
                 history.setyCoord(rs.getFloat("y_coord"));
-                history.setCreatedAt(rs.getDate("created_at"));
+                history.setCreatedAt(rs.getString("created_at"));
                 histories.add(history);
             }
 
