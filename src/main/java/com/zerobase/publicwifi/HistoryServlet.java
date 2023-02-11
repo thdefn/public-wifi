@@ -7,8 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "helloServlet", value = "/hs.do")
-public class HelloServlet extends HttpServlet {
+@WebServlet(name = "historyServlet", value = "/hs.do")
+public class HistoryServlet extends HttpServlet {
     private String message;
 
     public void init() {
