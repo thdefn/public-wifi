@@ -24,11 +24,12 @@
             navigator.geolocation.getCurrentPosition(success, error);
         }
 
-        function sendData(){
-
+        function sendDataforHistory(){
+            //history.jsp에 위도 경도 전송
             let latTag = document.form.lat;
             let lntTag = document.form.lnt;
 
+            //적합한 값인지 체크
             if(latTag == null || latTag.value == "0.0"){
                 alert("위도 값을 입력하세요")
                 latTag.focus();
@@ -41,6 +42,7 @@
                 return false;
             }
 
+            //적합한 값이면 새로운 form을 만들어 전송
             let f = document.createElement('form');
 
             let lat;
@@ -112,7 +114,7 @@
 <h1>와이파이 정보 구하기</h1><br/>
 <div class="menu">
     <div class="item"> <a href="index.jsp"> 홈 </a> </div>
-    <div class="item"> <a href="javascript:void(0)" onclick="sendData()"> 위치 히스토리 목록 </a> </div>
+    <div class="item"> <a href="javascript:void(0)" onclick="sendDataforHistory()"> 위치 히스토리 목록 </a> </div>
     <div class="item last"> <a href="load-wifi.jsp"> Open API 와이파이 정보 가져오기 </a> </div>
 </div><br/>
 
@@ -123,7 +125,6 @@
     <input type="text" id="lnt" value='<%=lnt%>' name="lnt">
     <input type="button" id="loc" value="내 위치 가져오기" onclick="getLocation()">
     <input type="submit" id="info" value="근처 WIFI 정보보기">
-
 </form><br/>
 
 <table id="table">

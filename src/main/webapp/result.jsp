@@ -10,7 +10,7 @@
 <head>
     <title>result</title>
     <script>
-        var id = ${id};
+        var id = ${id}; //row 삭제 처리를 위한 hist_id 받아오기
         parent.deleteRow(id);
     </script>
 </head>

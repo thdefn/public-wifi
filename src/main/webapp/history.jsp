@@ -14,7 +14,6 @@
     <title>와이파이 정보 구하기</title>
     <script type="text/javascript">
         function deleteRow(id){
-            console.log("deleterow")
             let row = document.getElementById(id);
             row.parentNode.removeChild(row);
         }
