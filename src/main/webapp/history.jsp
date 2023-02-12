@@ -83,7 +83,7 @@
         <td><%=history.getyCoord()%></td>
         <td><%=history.getCreatedAt()%></td>
         <td>
-            <form action="http://localhost:8080/hs.do" method="get" target="mock">
+            <form action="hs.do" method="get" target="mock">
                 <input type="hidden" name="hist_id" value='<%=history.getId()%>'>
                 <input type='submit' value='삭제'>
             </form>

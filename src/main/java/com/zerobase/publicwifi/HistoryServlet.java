@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-@WebServlet(name = "historyServlet", value = "/hs.do")
+@WebServlet("/hs.do")
 public class HistoryServlet extends HttpServlet {
     private String message;
 
