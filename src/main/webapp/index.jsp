@@ -101,7 +101,7 @@
     Float longitude = null;
     String lat = request.getParameter("lat");
     String lnt = request.getParameter("lnt");
-    if(lat!=null && lnt!=null){
+    if(lat!=null && lnt!=null && !"0.0".equals(lat) && !"0.0".equals(lnt)){
         latitude = Float.valueOf(lat);
         longitude = Float.valueOf(lnt);
         isSubmit = true;
