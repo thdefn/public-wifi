@@ -2,15 +2,13 @@
 
 ### project setting
 
-IDE : IntelliJ Ultimate <br/>
+IDE : IntelliJ IDEA <br/>
 JDK version : 1.8 <br/>
 Build System : Gradle <br/>
 Application Server : Tomcat 8.5.85 <br/>
 
 <br/>
 <br/>
-<br/>
-
 
 ### Required Settings Maybe
 
