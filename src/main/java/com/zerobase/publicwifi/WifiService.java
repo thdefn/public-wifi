@@ -98,7 +98,6 @@ public class WifiService {
 
             }
 
-            return totalCount;
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
