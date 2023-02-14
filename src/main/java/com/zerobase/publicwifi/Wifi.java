@@ -1,6 +1,5 @@
 package com.zerobase.publicwifi;
 
-import java.util.Date;
 
 public class Wifi {
     private Float distance;

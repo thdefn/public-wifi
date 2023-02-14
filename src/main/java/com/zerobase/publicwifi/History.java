@@ -1,8 +1,6 @@
 package com.zerobase.publicwifi;
 
 
-import java.util.Date;
-
 public class History {
     private Integer id;
     private Float xCoord;

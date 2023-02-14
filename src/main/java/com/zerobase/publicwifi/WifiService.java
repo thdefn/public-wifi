@@ -12,20 +12,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
 
 public class WifiService {
     private static final String AUTH_KEY = "7948437a6c74686438344872706241";
     private static final String BASE_URL = "http://openapi.seoul.go.kr:8088/";
     private static final String DB_URL = "jdbc:sqlite:wifiDB.db";
 
-    public int loadWifi(){
+    public int loadWifi() {
         Connection dbConnection = null;
-        Statement statement = null;
         PreparedStatement prepared = null;
         String sql;
         ResultSet rs = null;
@@ -33,29 +29,20 @@ public class WifiService {
         Integer startIdx = 1;
         String code = "INFO-000";
 
+
         try {
+
             Class.forName("org.sqlite.JDBC");
             dbConnection = DriverManager.getConnection(DB_URL);
-            statement = dbConnection.createStatement();
 
-            statement.executeUpdate(" drop table if exists wifi ");
-            statement.executeUpdate(" CREATE TABLE WIFI ( " +
+            dbConnection.prepareStatement(" drop table if exists wifi ").executeUpdate();
+            dbConnection.prepareStatement(" CREATE TABLE WIFI ( " +
                     "    MGR_NO VARCHAR(9) PRIMARY KEY NOT NULL, DISTRICT VARCHAR(10), NAME VARCHAR(20), " +
                     " ROAD_ADDR VARCHAR(30), DETAIL_ADDR VARACHAR(50), FLOOR VARCHAR(5), " +
                     " INST_TYPE VARCHAR(20), INST_AGENCY VARCHAR(20), SERVICE VARCHAR(10), " +
                     " NETWORK VARCHAR(10), YEAR VARCHAR(4), INDOOR BOOLEAN, CONNECT_ENV VARCHAR(10), " +
-                    " X_COORD REAL NOT NULL, Y_COORD REAL NOT NULL, WORK_AT DATE ) ");
+                    " X_COORD REAL NOT NULL, Y_COORD REAL NOT NULL, WORK_AT DATE ) ").executeUpdate();
 
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return totalCount;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
             URLConnection connection;
             String result;
             BufferedReader bf;
@@ -68,16 +55,16 @@ public class WifiService {
                     " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
 
 
-            while ("INFO-000".equals(code)){
+            while ("INFO-000".equals(code)) {
 
-                connection = new URL(BASE_URL + AUTH_KEY + "/json/TbPublicWifiInfo/" + Integer.toString(startIdx) + "/" + Integer.toString(startIdx+999) + "/").openConnection();
+                connection = new URL(BASE_URL + AUTH_KEY + "/json/TbPublicWifiInfo/" + Integer.toString(startIdx) + "/" + Integer.toString(startIdx + 999) + "/").openConnection();
                 connection.setRequestProperty("Content-type", "application/xml");
                 bf = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
 
                 result = bf.readLine();
                 object = JsonParser.parseString(result).getAsJsonObject().getAsJsonObject("TbPublicWifiInfo");
 
-                if(object == null) {
+                if (object == null) {
                     break;
                 }
 
@@ -88,22 +75,22 @@ public class WifiService {
 
                 for (int i = 0; i < rows.size(); i++) {
                     row = rows.get(i).getAsJsonObject();
-                    prepared.setString(1,row.get("X_SWIFI_MGR_NO").getAsString());
-                    prepared.setString(2,row.get("X_SWIFI_WRDOFC").getAsString());
-                    prepared.setString(3,row.get("X_SWIFI_MAIN_NM").getAsString());
-                    prepared.setString(4,row.get("X_SWIFI_ADRES1").getAsString());
-                    prepared.setString(5,row.get("X_SWIFI_ADRES2").getAsString());
-                    prepared.setString(6,row.get("X_SWIFI_INSTL_FLOOR").getAsString());
-                    prepared.setString(7,row.get("X_SWIFI_INSTL_TY").getAsString());
-                    prepared.setString(8,row.get("X_SWIFI_INSTL_MBY").getAsString());
-                    prepared.setString(9,row.get("X_SWIFI_SVC_SE").getAsString());
-                    prepared.setString(10,row.get("X_SWIFI_CMCWR").getAsString());
-                    prepared.setString(11,row.get("X_SWIFI_CNSTC_YEAR").getAsString());
-                    prepared.setBoolean(12,("실내".equals(row.get("X_SWIFI_INOUT_DOOR").getAsString()))?true:false); //1:0
-                    prepared.setString(13,row.get("X_SWIFI_REMARS3").getAsString());
-                    prepared.setFloat(14,row.get("LNT").getAsFloat()); //json에 따라 변경
-                    prepared.setFloat(15,row.get("LAT").getAsFloat());
-                    prepared.setString(16,row.get("WORK_DTTM").getAsString());
+                    prepared.setString(1, row.get("X_SWIFI_MGR_NO").getAsString());
+                    prepared.setString(2, row.get("X_SWIFI_WRDOFC").getAsString());
+                    prepared.setString(3, row.get("X_SWIFI_MAIN_NM").getAsString());
+                    prepared.setString(4, row.get("X_SWIFI_ADRES1").getAsString());
+                    prepared.setString(5, row.get("X_SWIFI_ADRES2").getAsString());
+                    prepared.setString(6, row.get("X_SWIFI_INSTL_FLOOR").getAsString());
+                    prepared.setString(7, row.get("X_SWIFI_INSTL_TY").getAsString());
+                    prepared.setString(8, row.get("X_SWIFI_INSTL_MBY").getAsString());
+                    prepared.setString(9, row.get("X_SWIFI_SVC_SE").getAsString());
+                    prepared.setString(10, row.get("X_SWIFI_CMCWR").getAsString());
+                    prepared.setString(11, row.get("X_SWIFI_CNSTC_YEAR").getAsString());
+                    prepared.setBoolean(12, ("실내".equals(row.get("X_SWIFI_INOUT_DOOR").getAsString())) ? true : false); //1:0
+                    prepared.setString(13, row.get("X_SWIFI_REMARS3").getAsString());
+                    prepared.setFloat(14, row.get("LNT").getAsFloat()); //json에 따라 변경
+                    prepared.setFloat(15, row.get("LAT").getAsFloat());
+                    prepared.setString(16, row.get("WORK_DTTM").getAsString());
                     prepared.executeUpdate();
                 }
 
@@ -115,15 +102,17 @@ public class WifiService {
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         } finally {
             try {
-                if(prepared!= null && !prepared.isClosed()){
+                if (prepared != null && !prepared.isClosed()) {
                     prepared.close();
                 }
             } catch (SQLException e) {
@@ -131,16 +120,8 @@ public class WifiService {
             }
 
             try {
-                if(rs!= null && !rs.isClosed()){
+                if (rs != null && !rs.isClosed()) {
                     rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                if(statement!= null && !statement.isClosed()){
-                    statement.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -148,7 +129,7 @@ public class WifiService {
 
             //커넥션 객체가 제대로 안닫힐 수도 있다, 안닫히면 서버가 죽기도 함
             try {
-                if(dbConnection!= null && !dbConnection.isClosed()){
+                if (dbConnection != null && !dbConnection.isClosed()) {
                     dbConnection.close();
                 }
             } catch (SQLException e) {
@@ -160,7 +141,7 @@ public class WifiService {
         return totalCount;
     }
 
-    public List<Wifi> getCloseList(Float lat, Float lnt){
+    public List<Wifi> getCloseList(Float lat, Float lnt) {
         List<Wifi> wifis = new ArrayList<>();
         Connection dbConnection = null;
         PreparedStatement prepared = null;
@@ -171,7 +152,7 @@ public class WifiService {
         try {
             Class.forName("org.sqlite.JDBC");
             dbConnection = DriverManager.getConnection(DB_URL);
-            sql =  " select mgr_no, district, name, road_addr, detail_addr, floor, " +
+            sql = " select mgr_no, district, name, road_addr, detail_addr, floor, " +
                     "       inst_type, inst_agency, service, network, year, indoor, " +
                     "       connect_env, x_coord, y_coord, work_at, " +
                     "       ( 6371 * acos( cos( radians(x_coord) ) * cos( radians( ? ) )* cos( radians( ? ) - radians(y_coord) )+ sin( radians(x_coord) ) * sin( radians( ? ) ) ) ) as distance " +
@@ -185,7 +166,7 @@ public class WifiService {
 
             rs = prepared.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
                 wifi = new Wifi();
                 wifi.setDistance(rs.getFloat("distance"));
                 wifi.setDistrict(rs.getString("district"));
@@ -213,9 +194,9 @@ public class WifiService {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
-                if(prepared!= null && !prepared.isClosed()){
+                if (prepared != null && !prepared.isClosed()) {
                     prepared.close();
                 }
             } catch (SQLException e) {
@@ -223,7 +204,7 @@ public class WifiService {
             }
 
             try {
-                if(rs!= null && !rs.isClosed()){
+                if (rs != null && !rs.isClosed()) {
                     rs.close();
                 }
             } catch (SQLException e) {
@@ -231,7 +212,7 @@ public class WifiService {
             }
 
             try {
-                if(dbConnection!= null && !dbConnection.isClosed()){
+                if (dbConnection != null && !dbConnection.isClosed()) {
                     dbConnection.close();
                 }
             } catch (SQLException e) {
@@ -244,7 +225,7 @@ public class WifiService {
         return wifis;
     }
 
-    public void addHistory(Float lat, Float lnt){
+    public void addHistory(Float lat, Float lnt) {
         Connection dbConnection = null;
         PreparedStatement prepared = null;
         String sql;
@@ -252,22 +233,21 @@ public class WifiService {
         try {
             Class.forName("org.sqlite.JDBC");
             dbConnection = DriverManager.getConnection(DB_URL);
-            sql =  " insert into history ( x_coord, y_coord, created_at ) " +
+            sql = " insert into history ( x_coord, y_coord, created_at ) " +
                     "values (?,?, datetime('now') ) ";
             prepared = dbConnection.prepareStatement(sql);
-            prepared.setFloat(1,lat);
-            prepared.setFloat(2,lnt);
+            prepared.setFloat(1, lat);
+            prepared.setFloat(2, lnt);
             prepared.executeUpdate();
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
 
             try {
-                if(prepared!= null && !prepared.isClosed()){
+                if (prepared != null && !prepared.isClosed()) {
                     prepared.close();
                 }
             } catch (SQLException e) {
@@ -275,7 +255,7 @@ public class WifiService {
             }
 
             try {
-                if(dbConnection!= null && !dbConnection.isClosed()){
+                if (dbConnection != null && !dbConnection.isClosed()) {
                     dbConnection.close();
                 }
             } catch (SQLException e) {
@@ -286,7 +266,7 @@ public class WifiService {
 
     }
 
-    public List<History> getHistory(Float lat, Float lnt){
+    public List<History> getHistory(Float lat, Float lnt) {
         Connection dbConnection = null;
         PreparedStatement prepared = null;
         String sql;
@@ -297,14 +277,14 @@ public class WifiService {
         try {
             Class.forName("org.sqlite.JDBC");
             dbConnection = DriverManager.getConnection(DB_URL);
-            sql =  " select hist_id, x_coord, y_coord, created_at " +
+            sql = " select hist_id, x_coord, y_coord, created_at " +
                     " from history where x_coord = ? and y_coord = ? ";
             prepared = dbConnection.prepareStatement(sql);
-            prepared.setFloat(1,lat);
-            prepared.setFloat(2,lnt);
+            prepared.setFloat(1, lat);
+            prepared.setFloat(2, lnt);
             rs = prepared.executeQuery();
 
-            while (rs.next()){
+            while (rs.next()) {
                 history = new History();
                 history.setId(rs.getInt("hist_id"));
                 history.setxCoord(rs.getFloat("x_coord"));
@@ -314,14 +294,13 @@ public class WifiService {
             }
 
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        finally {
+            e.printStackTrace();
+        } finally {
 
             try {
-                if(prepared!= null && !prepared.isClosed()){
+                if (prepared != null && !prepared.isClosed()) {
                     prepared.close();
                 }
             } catch (SQLException e) {
@@ -329,7 +308,7 @@ public class WifiService {
             }
 
             try {
-                if(rs!= null && !rs.isClosed()){
+                if (rs != null && !rs.isClosed()) {
                     rs.close();
                 }
             } catch (SQLException e) {
@@ -337,7 +316,7 @@ public class WifiService {
             }
 
             try {
-                if(dbConnection!= null && !dbConnection.isClosed()){
+                if (dbConnection != null && !dbConnection.isClosed()) {
                     dbConnection.close();
                 }
             } catch (SQLException e) {
@@ -350,7 +329,7 @@ public class WifiService {
 
     }
 
-    public void deleteHistory(int id){
+    public void deleteHistory(int id) {
         Connection dbConnection = null;
         PreparedStatement prepared = null;
         String sql;
@@ -358,20 +337,19 @@ public class WifiService {
         try {
             Class.forName("org.sqlite.JDBC");
             dbConnection = DriverManager.getConnection(DB_URL);
-            sql =  " delete from history where hist_id = ? ";
+            sql = " delete from history where hist_id = ? ";
             prepared = dbConnection.prepareStatement(sql);
-            prepared.setInt(1,id);
+            prepared.setInt(1, id);
             prepared.executeUpdate();
 
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        finally {
+            e.printStackTrace();
+        } finally {
 
             try {
-                if(prepared!= null && !prepared.isClosed()){
+                if (prepared != null && !prepared.isClosed()) {
                     prepared.close();
                 }
             } catch (SQLException e) {
@@ -379,7 +357,7 @@ public class WifiService {
             }
 
             try {
-                if(dbConnection!= null && !dbConnection.isClosed()){
+                if (dbConnection != null && !dbConnection.isClosed()) {
                     dbConnection.close();
                 }
             } catch (SQLException e) {
